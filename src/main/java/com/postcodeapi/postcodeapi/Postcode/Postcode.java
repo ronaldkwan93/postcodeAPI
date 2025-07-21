@@ -4,7 +4,6 @@ import com.postcodeapi.postcodeapi.Suburb.Suburb;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,6 +16,16 @@ public class Postcode {
 
     @Column
     private String code;
+
+    private String state;
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 
     public Long getId() {
         return id;

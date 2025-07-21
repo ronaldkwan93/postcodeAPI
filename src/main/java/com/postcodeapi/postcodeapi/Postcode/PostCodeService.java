@@ -5,7 +5,7 @@ import com.postcodeapi.postcodeapi.Suburb.SuburbRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 @Service
 public class PostCodeService {
@@ -18,7 +18,13 @@ public class PostCodeService {
         this.suburbRepository = suburbRepository;
     }
 
-    public Postcode save(String code) {
+
+
+    public Optional<Postcode> findPostCodeByCode(String postcode) {
+        return this.postCodeRepository.findByValue(postcode);
+    }
+
+    public Postcode addNewPostCode(String code) {
         Postcode newPostcode = new Postcode();
         newPostcode.setCode(code);
         return this.postCodeRepository.save(newPostcode);
@@ -28,12 +34,45 @@ public class PostCodeService {
         return this.postCodeRepository.findAll();
     }
 
-    public Postcode assignSuburbToPostCode(Long postId, Long suburbId) {
-        Postcode postcode = postCodeRepository.findById(postId).orElseThrow();
-        Suburb suburb = suburbRepository.findById(suburbId).orElseThrow();
+    public void assignSuburbToPostCode(String code, String sub ) {
+        Postcode postcode = postCodeRepository.findByValue(code).orElseThrow();
+        Suburb suburb = suburbRepository.findByValue(sub).orElseThrow();
 
         postcode.getAssignedSuburbs().add(suburb);
-        return postCodeRepository.save(postcode);
+        postCodeRepository.save(postcode);
     }
 
+    public void assignState(String code) {
+        Postcode postcode = postCodeRepository.findByValue(code).orElseThrow();
+        String state = getStateFromPostCode(code);
+        postcode.setState(state);
+        this.postCodeRepository.save(postcode);
+    }
+
+    public String getStateFromPostCode(String code) {
+        int numericPostcode = Integer.parseInt(code);
+        if (numericPostcode >= 200 && numericPostcode <= 299) {
+            return "ACT";
+        }
+
+        if (numericPostcode >= 800 && numericPostcode <= 899) {
+            return "NT";
+        }
+
+        char firstDigit = code.charAt(0);
+
+        return switch (firstDigit) {
+            case '1', '2' -> "NSW";
+            case '3' -> "VIC";
+            case '4' -> "QLD";
+            case '5' -> "SA";
+            case '6' -> "WA";
+            case '7' -> "TAS";
+            default -> "Unknown state";
+        };
+    }
+
+    public Optional<Postcode> findPostCodeByStateAndSuburb(String suburb, String state) {
+        return this.postCodeRepository.findByStateAndSuburb(suburb,state);
+    }
 }

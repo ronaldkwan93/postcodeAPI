@@ -26,14 +26,12 @@ public class SuburbController {
         return new ResponseEntity<>(suburbs, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<Suburb> addSuburb(@RequestBody @Valid AddSuburbDTO data) {
-        // get code from requestbody
-        // use service to save
 
-        Suburb createdSuburb = suburbService.save(data.getSuburb());
-        // return created status
+    @PutMapping
+    public Suburb assignPostCodeToSuburb(@RequestBody @Valid AssignPostCodeDTO data ) {
+        Long suburbId = data.getSuburbId();
+        Long postId = data.getPostCodeId();
 
-        return new ResponseEntity<>(createdSuburb, HttpStatus.CREATED);
+        return suburbService.assignPostCodeToSuburb(suburbId, postId);
     }
 }
