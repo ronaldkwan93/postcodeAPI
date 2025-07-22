@@ -3,6 +3,8 @@ package com.postcodeapi.postcodeapi.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -18,6 +20,10 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(String.valueOf(Role.valueOf("USER")));
         return this.userRepository.save(user);
+    }
+
+    public Optional<User> findExistingUser(User user) {
+        return this.userRepository.findByEmail(user.getEmail());
     }
 
     public User loginUser(LoginDTO user) {

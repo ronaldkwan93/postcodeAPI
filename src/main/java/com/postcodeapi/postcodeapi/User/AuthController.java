@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.swing.text.html.Option;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -41,7 +43,18 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody @Validated User user) {
+    public ResponseEntity<?> register(@RequestBody @Validated User user) {
+
+        Optional<User> existingUser = this.userService.findExistingUser(user);
+
+        Map<String, Object> errors = new HashMap<>();
+        errors.put("email", "Email already exists");
+        errors.put("status", 409);
+
+        if (existingUser.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(errors);
+        }
+
         return ResponseEntity.ok(this.userService.registerUser(user));
     }
 
