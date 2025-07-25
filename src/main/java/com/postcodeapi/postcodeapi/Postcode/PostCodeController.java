@@ -30,7 +30,7 @@ public class PostCodeController {
         return new ResponseEntity<>(postcodes, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/findSuburbs")
     public Optional<Postcode> getPostCode(@RequestParam String postcode ) {
         return this.postCodeService.findPostCodeByCode(postcode);
     }

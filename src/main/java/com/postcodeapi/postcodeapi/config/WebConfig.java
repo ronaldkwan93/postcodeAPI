@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     public void addCorsMappings(CorsRegistry registry) {
-        String[] allowedOrigins = { "http://localhost:5173/"};
+        String[] allowedOrigins = { "http://localhost:5173/", "https://d18275glmimxyg.cloudfront.net"};
         registry.addMapping("/**").allowedOrigins(allowedOrigins).allowedMethods("*").allowedHeaders("*");
     }
 }

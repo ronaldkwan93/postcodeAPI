@@ -48,7 +48,7 @@ public class SecurityConfig {
         http
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/register", "/login", "/logout", "/postcode/find", "/signin").permitAll()
+                .requestMatchers("/register", "/login", "/logout", "/postcode/find", "/postcode/findSuburbs" ,"/signin").permitAll()
                 // Authentication filter
                 .anyRequest().authenticated()
                 );
@@ -87,18 +87,3 @@ public class SecurityConfig {
     }
 
 }
-
-//.csrf(AbstractHttpConfigurer:: disable)
-////                .cors(Customizer.withDefaults())
-////                .authorizeHttpRequests((requests) -> requests
-////                .requestMatchers("/register", "/login", "/logout", "/postcode/find").permitAll()
-////                // Authentication filter
-////                .anyRequest().authenticated()
-////                );
-//////                .logout(logout -> logout
-//////                        .logoutUrl("/logout")
-//////                        .logoutSuccessUrl("/login")
-//////                        .invalidateHttpSession(true)
-//////                        .clearAuthentication(true)
-//////                        .deleteCookies("JSESSIONID")
-//////                        .permitAll());
