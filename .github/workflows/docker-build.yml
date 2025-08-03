@@ -51,6 +51,18 @@ jobs:
 
       - name: Trigger Render deploy
         run: |
-          curl -X POST "https://api.render.com/v1/services/${{ secrets.RENDER_URL }}/deploys" \
+          # Check required secrets
+          if [ -z "${{ secrets.RENDER_URL }}" ]; then
+            echo "RENDER_URL secret is not set. Failing workflow."
+            exit 1
+          fi
+
+          if [ -z "${{ secrets.RENDER_API_KEY }}" ]; then
+            echo "RENDER_API_KEY secret is not set. Failing workflow."
+            exit 1
+          fi
+
+          echo "Triggering Render deploy..."
+          curl -fsS -X POST "https://api.render.com/v1/services/${{ secrets.RENDER_URL }}/deploys" \
             -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
             -H "Accept: application/json"
